@@ -1,6 +1,15 @@
 # Discregrid
 
-**Discregrid** is a static C++ library for the parallel discretization of (preferably smooth) functions on regular grids. Given a box-shaped domain, a grid resolution and a function mapping a three-dimensional position in space to a scalar real value a polynomial discretization is computed. In the current implementation cubic polynomials of Serendipity type are employed for the cell-wise discretization. The coefficient vector for the discrete polynomial basis is computed using regular sampling of the input function at the higher-order grid's nodes. However, I plan to provide a spatially adaptive version of the cubic discretization and moreover an implementation of the hp-adaptive discretization algorithm described in [KDBB17]. The algorithm  to generate the discretization is moreover *fully parallelized** using OpenMP is especially well-suited for the discretization of signed distance functions. The library moreover provides the functionality to serialize and deserialize the a generated discrete grid.
+![](https://www.animation.rwth-aachen.de/media/resource_files/DragonSDFDM.png)
+**Figure 1**: Left: Slice of a three-dimensional discrete signed distance field of the Stanford dragon. Right: Density map for SPH boundary handling of Stanford dragon.
+
+**Discregrid** is a static C++ library for the parallel discretization of (preferably smooth) functions on regular grids.
+The library generates a (cubic) polynomial discretization given a box-shaped domain, a grid resolution, and a function that maps a three-dimensional position in space to a real scalar value.
+In the current implementation isoparametric cubic polynomials of Serendipity type for the cell-wise discretization are employed.
+The coefficient vector for the discrete polynomial basis is computed using regular sampling of the input function at the higher-order grid's nodes.
+However, I plan to provide a spatially adaptive version of the cubic discretization and moreover an implementation of the hp-adaptive discretization algorithm described in [KDBB17].
+The algorithm to generate the discretization is moreover *fully parallelized* using OpenMP and especially well-suited for the discretization of signed distance functions.
+The library moreover provides the functionality to serialize and deserialize the a generated discrete grid.
 
 Besides the library the project includes three executable programs that serve the following purposes:
 * *GenerateSDF*: Computes a discrete (cubic) signed distance field from a triangle mesh in OBJ format.
@@ -17,17 +26,17 @@ Besides the library the project includes three executable programs that serve th
 
 This project is based on [CMake](https://cmake.org/). Simply generate project, Makefiles, etc. using [CMake](https://cmake.org/) and compile the project with the compiler of your choice. The code was tested with the following configurations:
 - Windows 10 64-bit, CMake 3.8, Visual Studio 2017
-- Debian 8 64-bit, CMake 3.8, GCC 4.9.2.
+- Debian 9 64-bit, CMake 3.8, GCC 6.3.
 
 ## Usage
-In order to use the library the main header has to be included and the static library has to be compiled and linked against the client program.
+In order to use the library, the main header has to be included and the static library has to be compiled and linked against the client program.
 In this regard a find script for CMake is provided, i.e. FindDiscregrid.cmake.
 The main header can be included as follows:
 ```c++
 #include <Discregrid/All>
 ```
 
-A base class for the data structure that generates and holds a discretization a function f: R -> R^3 can be constructed as follows:
+A base class for the data structure that generates and holds a discretization of a function f: R^3 -> R can be constructed as follows:
 ```c++
 // Firstly, create a domain on which a discretization will be generated.
 Eigen::AlignedBox3d domain;
@@ -59,17 +68,17 @@ A value of a discrete field can be evaluated by interpolation.
 Additionally, the gradient at the given query point can be computed if desired.
 ```c++
 auto val1 = sdf->interpolate(df_index1, {0.1, 0.2, 0.3});
-auto grad2 = Eigen::Vector3d{};
+Eigen::Vector3d grad2;
 auto val2 = sdf->interpolate(df_index2, {0.3, 0.2, 0.1}, &grad2);
 ```
 
 If a discretization of the input function is only required in certain regions of the given domain, the discretization can be reduced resulting in a sparsely populated grid to save memory:
 ```c++
 discrete_grid.reduce_field(df_index1, [](Eigen::Vector3d const& x, double v)
-	{
-		// E.g.
-		return x.x() < 0.0 && v > 0.0;
-	});
+{
+	// E.g.
+	return x.x() < 0.0 && v > 0.0;
+});
 ```
 Here x represents the location of sample point in the grid and v represents the sampled value of the input function. If the predicated function evaluates to true the sample point is kept but discarded otherwise.
 
