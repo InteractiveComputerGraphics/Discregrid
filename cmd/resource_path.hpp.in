@@ -1,0 +1,7 @@
+
+#ifndef RESOURCE_PATH_HPP__
+#define RESOURCE_PATH_HPP__
+
+static char const* const RESOURCE_PATH = "@RESOURCE_PATH@";
+
+#endif // RESOURCE_PATH_HPP__
