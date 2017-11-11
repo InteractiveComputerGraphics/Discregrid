@@ -14,11 +14,11 @@ The library moreover provides the functionality to serialize and deserialize the
 Besides the library the project includes three executable programs that serve the following purposes:
 * *GenerateSDF*: Computes a discrete (cubic) signed distance field from a triangle mesh in OBJ format.
 * *DiscreteFieldToBitmap*: Generates an image in bitmap format of a two-dimensional slice of a previously computed discretization.
-* *GenerateDensityMap*: Generates a density map according to the approach presented in [KB17] from a previously generated discrete signed distance field.
+* *GenerateDensityMap*: Generates a density map according to the approach presented in [KB17] from a previously generated discrete signed distance field using the widely adopted cubic spline kernel. The program can be easily extended to work with other kernel function by simply replacing the implementation in sph_kernel.hpp.
 
 **Author**: Dan Koschier, **License**: MIT
 
-## Libraries using CompactNSearch
+## Libraries using Discregrid
 * [PBD] - A C++ library for physically-based simulation of rigid bodies, deformables, cloth and fluids using Position-Based Dynamics. Discregrid is used to compute discrete signed distance fields of rigid objects for collision handling purposes.
 * [SPlisHSPlasH] - A C++ library for the physically-based simulation of fluids using Smoothed Particle Hydrodynamics. Discregrid is used to compute density maps according to my paper [KB17] for boundary handling.
 
