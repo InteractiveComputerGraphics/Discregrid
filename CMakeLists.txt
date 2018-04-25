@@ -6,6 +6,9 @@ project(Discregrid)
 # Visual studio solution directories.
 set_property(GLOBAL PROPERTY USE_FOLDERS on)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Enable simultaneous compilation of source files.
 if(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
