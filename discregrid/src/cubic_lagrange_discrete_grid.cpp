@@ -826,7 +826,7 @@ CubicLagrangeDiscreteGrid::addFunction(ContinuousFunction const& func, bool verb
 		else
 			c = std::numeric_limits<double>::max();
 
-		if (++counter == n_nodes || duration_cast<milliseconds>(high_resolution_clock::now() - t0).count() > 10u)
+		if (++counter == n_nodes || duration_cast<milliseconds>(high_resolution_clock::now() - t0).count() > 1000u)
 		{
 			std::async(std::launch::async, [&]()
 			{
