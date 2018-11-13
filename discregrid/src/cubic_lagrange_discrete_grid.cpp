@@ -890,9 +890,88 @@ CubicLagrangeDiscreteGrid::addFunction(ContinuousFunction const &func, bool verb
 	cell_map.resize(m_n_cells);
 	std::iota(cell_map.begin(), cell_map.end(), 0u);
 
-	std::cout << "\rConstruction took " << std::setw(15) << static_cast<double>(duration_cast<milliseconds>(high_resolution_clock::now() - t0_construction).count()) / 1000.0 << "s" << std::endl;
+	if (verbose)
+	{
+		std::cout << "\rConstruction took " << std::setw(15) << static_cast<double>(duration_cast<milliseconds>(high_resolution_clock::now() - t0_construction).count()) / 1000.0 << "s" << std::endl;
+	}
 
 	return static_cast<unsigned int>(m_n_fields++);
+}
+
+bool
+CubicLagrangeDiscreteGrid::determineShapeFunctions(unsigned int field_id, Eigen::Vector3d const &x,
+	std::array<unsigned int, 32> &cell, Eigen::Vector3d &c0, Eigen::Matrix<double, 32, 1> &N,
+	Eigen::Matrix<double, 32, 3> *dN) const
+{
+	if (!m_domain.contains(x))
+		return false;
+
+	auto mi = (x - m_domain.min()).cwiseProduct(m_inv_cell_size).cast<unsigned int>().eval();
+	if (mi[0] >= m_resolution[0])
+		mi[0] = m_resolution[0] - 1;
+	if (mi[1] >= m_resolution[1])
+		mi[1] = m_resolution[1] - 1;
+	if (mi[2] >= m_resolution[2])
+		mi[2] = m_resolution[2] - 1;
+	auto i = multiToSingleIndex({ { mi(0), mi(1), mi(2) } });
+	auto i_ = m_cell_map[field_id][i];
+	if (i_ == std::numeric_limits<unsigned int>::max())
+		return false;
+
+	auto sd = subdomain(i);
+	i = i_;
+	auto d = sd.diagonal().eval();
+
+	auto denom = (sd.max() - sd.min()).eval();
+	c0 = Vector3d::Constant(2.0).cwiseQuotient(denom).eval();
+	auto c1 = (sd.max() + sd.min()).cwiseQuotient(denom).eval();
+	auto xi = (c0.cwiseProduct(x) - c1).eval();
+
+	cell = m_cells[field_id][i];
+	N = shape_function_(xi, dN);
+	return true;
+}
+
+double 
+CubicLagrangeDiscreteGrid::interpolate(unsigned int field_id, Eigen::Vector3d const& xi, const std::array<unsigned int, 32> &cell, const Eigen::Vector3d &c0, const Eigen::Matrix<double, 32, 1> &N,
+	Eigen::Vector3d* gradient, Eigen::Matrix<double, 32, 3> *dN) const
+{
+	if (!gradient)
+	{
+		auto phi = 0.0;
+		for (auto j = 0u; j < 32u; ++j)
+		{
+			auto v = cell[j];
+			auto c = m_nodes[field_id][v];
+			if (c == std::numeric_limits<double>::max())
+			{
+				return std::numeric_limits<double>::max();
+			}
+			phi += c * N[j];
+		}
+
+		return phi;
+	}
+
+	auto phi = 0.0;
+	gradient->setZero();
+	for (auto j = 0u; j < 32u; ++j)
+	{
+		auto v = cell[j];
+		auto c = m_nodes[field_id][v];
+		if (c == std::numeric_limits<double>::max())
+		{
+			gradient->setZero();
+			return std::numeric_limits<double>::max();
+		}
+		phi += c * N[j];
+		(*gradient)(0) += c * (*dN)(j, 0);
+		(*gradient)(1) += c * (*dN)(j, 1);
+		(*gradient)(2) += c * (*dN)(j, 2);
+	}
+	gradient->array() *= c0.array();
+
+	return phi;
 }
 
 double
