@@ -80,7 +80,8 @@ int main(int argc, char* argv[])
 	std::cout << "Load SDF...";
 	if (extension == "cdf")
 	{
-		sdf = std::make_unique<Discregrid::CubicLagrangeDiscreteGrid>(filename);
+		sdf = std::unique_ptr<Discregrid::CubicLagrangeDiscreteGrid>(
+				new Discregrid::CubicLagrangeDiscreteGrid(filename));
 	}
 	std::cout << "DONE" << std::endl;
 
@@ -139,11 +140,11 @@ int main(int argc, char* argv[])
 	if (options["no-reduction"].count() == 0u)
 	{
 		std::cout << "Reduce discrete fields...";
-		sdf->reduceField(0u, [&](auto const&, double v)
+		sdf->reduceField(0u, [&](const Vector3d &, double v)
 		{
 			return -6.0 * h < v + cell_diag && v -cell_diag  < 2.0 * h;
 		});
-		sdf->reduceField(1u, [&](auto const&, double v)
+		sdf->reduceField(1u, [&](const Vector3d &, double v)
 		{
 			return 0.0 <= v && v <= 3.0 * rho0;
 		});

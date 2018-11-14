@@ -78,7 +78,8 @@ int main(int argc, char* argv[])
 	std::cout << "Load SDF...";
 	if (extension == "cdf" || extension == "cdm")
 	{
-		sdf = std::make_unique<Discregrid::CubicLagrangeDiscreteGrid>(filename);
+		sdf = std::unique_ptr<Discregrid::CubicLagrangeDiscreteGrid>(
+				new Discregrid::CubicLagrangeDiscreteGrid(filename));
 	}
 	std::cout << "DONE" << std::endl;
 
