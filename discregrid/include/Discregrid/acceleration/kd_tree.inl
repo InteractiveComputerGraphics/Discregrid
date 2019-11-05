@@ -185,8 +185,8 @@ KDTree<HullType>::update()
         [&](unsigned int, unsigned int) { return true; },
         [&](unsigned int node_index, unsigned int)
         {
-            auto const& node = node(node_index);
-            computeHull(node.begin, node.n, hull(node_index));
+            auto const& nd = node(node_index);
+            computeHull(nd.begin, nd.n, hull(node_index));
         }
     );
 }
