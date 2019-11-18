@@ -74,7 +74,12 @@ int main(int argc, char* argv[])
 		Discregrid::MeshDistance md(mesh);
 		std::cout << "DONE" << std::endl;
 
-		auto domain = result["d"].as<Eigen::AlignedBox3d>();
+		Eigen::AlignedBox3d domain;
+		domain.setEmpty();
+		if (result.count("d"))
+		{
+			domain = result["d"].as<Eigen::AlignedBox3d>();
+		}
 		if (domain.isEmpty())
 		{
 			for (auto const& x : mesh.vertices())
