@@ -1,9 +1,7 @@
 
 #include <acceleration/bounding_sphere_hierarchy.hpp>
 
-#include <miniball/miniball.hpp>
 #include <iostream>
-#include <unordered_set>
 #include <set>
 
 using namespace Eigen;
@@ -51,22 +49,21 @@ struct TBSHCoordAccessor
 void
 TriangleMeshBSH::computeHull(unsigned int b, unsigned int n, BoundingSphere& hull) const
 {
-	auto vertex_set = std::set<unsigned int>{};
+	auto vertices_subset = std::vector<Vector3d>(3 * n);
 	for (unsigned int i(0); i < n; ++i)
 	{
 		auto const& f = m_faces[m_lst[b + i]];
 		{
-			vertex_set.insert(f[0]);
-			vertex_set.insert(f[1]);
-			vertex_set.insert(f[2]);
+			vertices_subset[3 * i + 0] = m_vertices[f[0]];
+			vertices_subset[3 * i + 1] = m_vertices[f[1]];
+			vertices_subset[3 * i + 2] = m_vertices[f[2]];
 		}
 	}
 
-	auto ca = TBSHCoordAccessor(&m_vertices, &vertex_set);
-	auto mb = Miniball::Miniball<TBSHCoordAccessor>(3, vertex_set.begin(), vertex_set.end(), ca);
+	const BoundingSphere s(vertices_subset);
 
-	hull.x() = Map<Vector3d const>(mb.center());
-	hull.r() = std::sqrt(mb.squared_radius());
+	hull.x() = s.x();
+	hull.r() = s.r();
 }
 
 TriangleMeshBBH::TriangleMeshBBH(
@@ -141,10 +138,14 @@ struct PCBSHCoordAccessor
 void
 PointCloudBSH::computeHull(unsigned int b, unsigned int n, BoundingSphere& hull) const
 {
-	auto mb = Miniball::Miniball<PCBSHCoordAccessor>(3, b, b + n,  {m_vertices, &m_lst});
+	auto vertices_subset = std::vector<Vector3d>(3 * n);
+	for (unsigned int i(0); i < n; ++i)
+		vertices_subset[3 * i + 0] = (*m_vertices)[m_lst[i]];
 
-	hull.x() = Map<Vector3d const>(mb.center());
-	hull.r() = std::sqrt(mb.squared_radius());
+	const BoundingSphere s(vertices_subset);
+
+	hull.x() = s.x();
+	hull.r() = s.r();
 }
 
 
