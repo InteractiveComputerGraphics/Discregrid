@@ -29,23 +29,6 @@ TriangleMeshBSH::entityPosition(unsigned int i) const
 	return m_tri_centers[i];
 }
 
-struct TBSHCoordAccessor 
-{
-	TBSHCoordAccessor(std::vector<Vector3d> const* vertices_,
-		std::set<unsigned int> const* indices_) 
-		: indices(indices_), vertices(vertices_)
-	{
-	}
-
-	using Pit = std::set<unsigned int>::const_iterator;
-	using Cit = double const*;
-	inline  Cit operator() (Pit it) const { 
-		return (*vertices)[*it].data(); 
-	}
-	std::set<unsigned int> const* indices;
-	std::vector<Vector3d> const* vertices;
-};
-
 void
 TriangleMeshBSH::computeHull(unsigned int b, unsigned int n, BoundingSphere& hull) const
 {
@@ -117,30 +100,12 @@ PointCloudBSH::entityPosition(unsigned int i) const
 	return (*m_vertices)[i];
 }
 
-struct PCBSHCoordAccessor
-{
-	PCBSHCoordAccessor(std::vector<Vector3d> const* vertices_,
-		std::vector<unsigned int> const* lst_)
-		: vertices(vertices_), lst(lst_)
-	{
-	}
-
-	using Pit = unsigned int;
-	using Cit = double const*;
-	inline  Cit operator() (Pit it) const {
-		return (*vertices)[(*lst)[it]].data();
-	}
-	std::vector<Vector3d> const* vertices;
-	std::vector<unsigned int> const* lst;
-};
-
-
 void
 PointCloudBSH::computeHull(unsigned int b, unsigned int n, BoundingSphere& hull) const
 {
-	auto vertices_subset = std::vector<Vector3d>(3 * n);
-	for (unsigned int i(0); i < n; ++i)
-		vertices_subset[3 * i + 0] = (*m_vertices)[m_lst[i]];
+	auto vertices_subset = std::vector<Vector3d>(n);
+	for (unsigned int i = b; i < n + b; ++i)
+		vertices_subset[i - b] = (*m_vertices)[m_lst[i]];
 
 	const BoundingSphere s(vertices_subset);
 

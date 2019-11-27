@@ -23,15 +23,15 @@ public:
 	/**
 	 * \brief constructor which sets the center and radius
 	 *
-	 * \param x	3d coordiantes of the center point
+	 * \param x	3d coordinates of the center point
 	 * \param r radius of the sphere
 	 */
-	BoundingSphere(Eigen::Vector3d const& x, double r) : m_x(x), m_r(r) {}
+	BoundingSphere(const Eigen::Vector3d& x, double r) : m_x(x), m_r(r) {}
 
 	/**
 	 * \brief	constructs a sphere for one point (with radius 0)
 	 *
-	 * \param a	3d coordiantes of point a
+	 * \param a	3d coordinates of point a
 	 */
 	BoundingSphere(const Eigen::Vector3d& a)
 	{
@@ -42,8 +42,8 @@ public:
 	/**
 	 * \brief	constructs the smallest enclosing sphere for two points
 	 *
-	 * \param a 3d coordiantes of point a
-	 * \param b 3d coordiantes of point b
+	 * \param a 3d coordinates of point a
+	 * \param b 3d coordinates of point b
 	 */
 	BoundingSphere(const Eigen::Vector3d& a, const Eigen::Vector3d& b)
 	{
@@ -56,9 +56,9 @@ public:
 	/**
 	 * \brief	constructs the smallest enclosing sphere for three points
 	 *
-	 * \param a 3d coordiantes of point a
-	 * \param b 3d coordiantes of point b
-	 * \param c 3d coordiantes of point c
+	 * \param a 3d coordinates of point a
+	 * \param b 3d coordinates of point b
+	 * \param c 3d coordinates of point c
 	 */
 	BoundingSphere(const Eigen::Vector3d& a, const Eigen::Vector3d& b, const Eigen::Vector3d& c)
 	{
@@ -83,10 +83,10 @@ public:
 	/**
 	 * \brief constructs the smallest enclosing sphere for four points
 	 *
-	 * \param a 3d coordiantes of point a
-	 * \param b 3d coordiantes of point b
-	 * \param c 3d coordiantes of point c
-	 * \param d 3d coordiantes of point d
+	 * \param a 3d coordinates of point a
+	 * \param b 3d coordinates of point b
+	 * \param c 3d coordinates of point c
+	 * \param d 3d coordinates of point d
 	 */
 	BoundingSphere(const Eigen::Vector3d& a, const Eigen::Vector3d& b, const Eigen::Vector3d& c, const Eigen::Vector3d& d)
 	{
@@ -169,7 +169,7 @@ public:
 		Eigen::Vector3d d;
 		const int n = int(v.size());
 
-		//generate random permutation of the points and permute the points by epsilon to avoid corner cases
+		//generate random permutation of the points and perturb the points by epsilon to avoid corner cases
 		const double epsilon = 1.0e-6;
 		for (int i = n - 1; i > 0; i--)
 		{
@@ -191,7 +191,7 @@ public:
 		}
 
 		m_x = S.m_x;
-		m_r = S.m_r + epsilon;	//add epsilon to make sure that all non-pertubated points are inside the sphere
+		m_r = S.m_r + epsilon;	//add epsilon to make sure that all non-perturbed points are inside the sphere
 	}
 
 	/**
