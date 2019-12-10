@@ -1,5 +1,7 @@
 # Discregrid
 
+<p align=center><img src="https://github.com/InteractiveComputerGraphics/Discregrid/workflows/build-linux/badge.svg">&nbsp;&nbsp; <img src="https://github.com/InteractiveComputerGraphics/Discregrid/workflows/build-windows/badge.svg"></p>
+
 ![](https://www.animation.rwth-aachen.de/media/resource_files/DragonSDFDM.png)
 **Figure 1**: Left: Slice of a three-dimensional discrete signed distance field of the Stanford dragon. Right: Density map for SPH boundary handling of Stanford dragon.
 

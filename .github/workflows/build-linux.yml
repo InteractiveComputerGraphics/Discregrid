@@ -1,0 +1,17 @@
+name: build-linux
+
+on: [push]
+
+jobs:
+  build-ubuntu:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install eigen 3
+      run: sudo apt-get -y install libeigen3-dev
+    - name: configure
+      run: mkdir build-release && cd build-release && cmake -DCMAKE_BUILD_TYPE=Release ..
+    - name: build
+      run: cmake --build build-release

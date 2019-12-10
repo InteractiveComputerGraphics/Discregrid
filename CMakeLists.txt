@@ -18,6 +18,14 @@ if(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250")
 endif(WIN32)
 
+OPTION(BUILD_AS_SHARED_LIBS "Build all the libraries as shared" OFF)
+if (BUILD_AS_SHARED_LIBS)
+	set(BUILD_AS_SHARED_LIBS ON)
+	if(WIN32)
+		set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON CACHE BOOL "Export all symbols")
+	endif(WIN32)	
+endif (BUILD_AS_SHARED_LIBS)
+
 set(CMAKE_DEBUG_POSTFIX "_d")
 
 # Put all executables and libraries into a common directory.

@@ -1,9 +1,7 @@
 
 #include <acceleration/bounding_sphere_hierarchy.hpp>
 
-#include <miniball/miniball.hpp>
 #include <iostream>
-#include <unordered_set>
 #include <set>
 
 using namespace Eigen;
@@ -31,42 +29,24 @@ TriangleMeshBSH::entityPosition(unsigned int i) const
 	return m_tri_centers[i];
 }
 
-struct TBSHCoordAccessor 
-{
-	TBSHCoordAccessor(std::vector<Vector3d> const* vertices_,
-		std::set<unsigned int> const* indices_) 
-		: indices(indices_), vertices(vertices_)
-	{
-	}
-
-	using Pit = std::set<unsigned int>::const_iterator;
-	using Cit = double const*;
-	inline  Cit operator() (Pit it) const { 
-		return (*vertices)[*it].data(); 
-	}
-	std::set<unsigned int> const* indices;
-	std::vector<Vector3d> const* vertices;
-};
-
 void
 TriangleMeshBSH::computeHull(unsigned int b, unsigned int n, BoundingSphere& hull) const
 {
-	auto vertex_set = std::set<unsigned int>{};
+	auto vertices_subset = std::vector<Vector3d>(3 * n);
 	for (unsigned int i(0); i < n; ++i)
 	{
 		auto const& f = m_faces[m_lst[b + i]];
 		{
-			vertex_set.insert(f[0]);
-			vertex_set.insert(f[1]);
-			vertex_set.insert(f[2]);
+			vertices_subset[3 * i + 0] = m_vertices[f[0]];
+			vertices_subset[3 * i + 1] = m_vertices[f[1]];
+			vertices_subset[3 * i + 2] = m_vertices[f[2]];
 		}
 	}
 
-	auto ca = TBSHCoordAccessor(&m_vertices, &vertex_set);
-	auto mb = Miniball::Miniball<TBSHCoordAccessor>(3, vertex_set.begin(), vertex_set.end(), ca);
+	const BoundingSphere s(vertices_subset);
 
-	hull.x() = Map<Vector3d const>(mb.center());
-	hull.r() = std::sqrt(mb.squared_radius());
+	hull.x() = s.x();
+	hull.r() = s.r();
 }
 
 TriangleMeshBBH::TriangleMeshBBH(
@@ -120,31 +100,17 @@ PointCloudBSH::entityPosition(unsigned int i) const
 	return (*m_vertices)[i];
 }
 
-struct PCBSHCoordAccessor
-{
-	PCBSHCoordAccessor(std::vector<Vector3d> const* vertices_,
-		std::vector<unsigned int> const* lst_)
-		: vertices(vertices_), lst(lst_)
-	{
-	}
-
-	using Pit = unsigned int;
-	using Cit = double const*;
-	inline  Cit operator() (Pit it) const {
-		return (*vertices)[(*lst)[it]].data();
-	}
-	std::vector<Vector3d> const* vertices;
-	std::vector<unsigned int> const* lst;
-};
-
-
 void
 PointCloudBSH::computeHull(unsigned int b, unsigned int n, BoundingSphere& hull) const
 {
-	auto mb = Miniball::Miniball<PCBSHCoordAccessor>(3, b, b + n,  {m_vertices, &m_lst});
+	auto vertices_subset = std::vector<Vector3d>(n);
+	for (unsigned int i = b; i < n + b; ++i)
+		vertices_subset[i - b] = (*m_vertices)[m_lst[i]];
 
-	hull.x() = Map<Vector3d const>(mb.center());
-	hull.r() = std::sqrt(mb.squared_radius());
+	const BoundingSphere s(vertices_subset);
+
+	hull.x() = s.x();
+	hull.r() = s.r();
 }
 
 
