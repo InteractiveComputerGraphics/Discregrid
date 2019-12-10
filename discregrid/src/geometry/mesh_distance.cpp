@@ -5,6 +5,7 @@
 
 #include <limits>
 #include <functional>
+#include <omp.h>
 
 using namespace Eigen;
 
