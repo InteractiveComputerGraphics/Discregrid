@@ -12,11 +12,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # Enable simultaneous compilation of source files.
-if(WIN32)
+if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /openmp")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250")
-endif(WIN32)
+endif(MSVC)
 
 OPTION(BUILD_AS_SHARED_LIBS "Build all the libraries as shared" OFF)
 if (BUILD_AS_SHARED_LIBS)
