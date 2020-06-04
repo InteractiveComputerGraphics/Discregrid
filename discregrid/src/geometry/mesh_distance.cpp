@@ -127,28 +127,21 @@ MeshDistance::predicate(unsigned int node_index,
 	Vector3d const& x, 
 	double& dist_candidate) const
 {
-	auto const& node = bsh.node(node_index);
+	// If the furthest point on the current candidate hull is closer than the closest point on the next hull then we can skip it
 	auto const& hull = bsh.hull(node_index);
+	auto const& hull_radius = hull.r();
+	auto const& hull_center = hull.x();
 
-	auto r = hull.r();
+	const auto dist_sq_to_center = (x - hull_center).squaredNorm();
 
-	auto temp = (x - hull.x()).eval();
-	auto d_center2 = temp[0] * temp[0] + temp[1] * temp[1] + temp[2] * temp[2];
-	auto dmr = dist_candidate - r;
-	if (dmr > 0.0)
-	{
-		auto temp = dist_candidate - r;
-		if (temp * temp > d_center2)
-			dist_candidate = std::sqrt(d_center2) + r;
+	if (dist_candidate > hull_radius) {
+		const auto l = dist_candidate - hull_radius;
+		if (l * l > dist_sq_to_center)
+			dist_candidate = std::sqrt(dist_sq_to_center) + hull_radius;
 	}
-	else
-	{
-		auto d_center = std::sqrt(d_center2);
-		if (dmr > d_center)
-			dist_candidate = d_center + r;
-	}
-	auto temp_ = dist_candidate + r;
-	return d_center2 <= temp_ * temp_;
+
+	const auto d = dist_candidate + hull_radius;
+	return dist_sq_to_center <= d * d;
 }
 
 void
