@@ -4,14 +4,6 @@ set(HEADERS
 	include/Discregrid/cubic_lagrange_discrete_grid.hpp
 )
 
-set(HEADERS_ACCELERATION
-
-	include/Discregrid/acceleration/bounding_sphere_hierarchy.hpp
-	include/Discregrid/acceleration/bounding_sphere.hpp
-	include/Discregrid/acceleration/kd_tree.hpp
-	include/Discregrid/acceleration/kd_tree.inl
-)
-
 set(HEADERS_MESH
 	include/Discregrid/mesh/triangle_mesh.hpp
 	include/Discregrid/mesh/entity_containers.hpp
@@ -20,9 +12,7 @@ set(HEADERS_MESH
 )
 
 set(HEADERS_GEOMETRY
-	include/Discregrid/geometry/mesh_distance.hpp
-
-	src/geometry/point_triangle_distance.hpp
+	include/Discregrid/geometry/TriangleMeshDistance.h
 )
 
 set(HEADERS_UTILITY
@@ -38,22 +28,10 @@ set(SOURCES
 	src/cubic_lagrange_discrete_grid.cpp
 )
 
-set(SOURCES_DATA
-)
-
-set(SOURCES_ACCELERATION
-	src/acceleration/bounding_sphere_hierarchy.cpp
-)
-
 set(SOURCES_MESH
 	src/mesh/entity_containers.cpp
 	src/mesh/entity_iterators.cpp
 	src/mesh/triangle_mesh.cpp
-)
-
-set(SOURCES_GEOMETRY
-	src/geometry/mesh_distance.cpp
-	src/geometry/point_triangle_distance.cpp
 )
 
 set(SOURCES_UTILITY
@@ -69,10 +47,9 @@ macro(SOURCEGROUP name)
 	source_group("Header Files ${dname}" FILES ${HEADERS_${name}})
 endmacro()
 SOURCEGROUP(MESH)
-SOURCEGROUP(ACCELERATION)
 SOURCEGROUP(DATA)
-SOURCEGROUP(GEOMETRY)
 SOURCEGROUP(UTILITY)
+SOURCEGROUP(GEOMETRY)
 
 # OpenMP support.
 if(APPLE)
@@ -108,13 +85,10 @@ endif(WIN32)
 set(DISCREGRID_SOURCE_FILES
 	${HEADERS}
 	${SOURCES}
-	${HEADERS_ACCELERATION}
-	${SOURCES_ACCELERATION}
 	${SOURCES_DATA}
 	${HEADERS_MESH}
 	${SOURCES_MESH}
 	${HEADERS_GEOMETRY}
-	${SOURCES_GEOMETRY}
 	${HEADERS_UTILITY}
 	${SOURCES_UTILITY}
 )

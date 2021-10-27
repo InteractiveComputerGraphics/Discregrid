@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 		std::cout << "DONE" << std::endl;
 
 		std::cout << "Set up data structures...";
-		Discregrid::MeshDistance md(mesh);
+		Discregrid::TriangleMeshDistance md(mesh);
 		std::cout << "DONE" << std::endl;
 
 		Eigen::AlignedBox3d domain;
@@ -94,11 +94,11 @@ int main(int argc, char* argv[])
 		auto func = Discregrid::DiscreteGrid::ContinuousFunction{};
 		if (result.count("invert"))
 		{
-			func = [&md](Vector3d const& xi) {return -1.0 * md.signedDistanceCached(xi); };
+			func = [&md](Vector3d const& xi) {return -1.0 * md.signed_distance(xi).distance; };
 		}
 		else
 		{
-			func = [&md](Vector3d const& xi) {return md.signedDistanceCached(xi); };
+			func = [&md](Vector3d const& xi) {return md.signed_distance(xi).distance; };
 		}
 
 		std::cout << "Generate discretization..." << std::endl;
