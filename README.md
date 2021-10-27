@@ -7,13 +7,13 @@
 
 **Discregrid** is a static C++ library for the parallel discretization of (preferably smooth) functions on regular grids.
 The library generates a (cubic) polynomial discretization given a box-shaped domain, a grid resolution, and a function that maps a three-dimensional position in space to a real scalar value.
-In the current implementation isoparametric cubic polynomials of Serendipity type for the cell-wise discretization are employed.
+Isoparametric cubic polynomials of Serendipity type for the cell-wise discretization are employed.
 The coefficient vector for the discrete polynomial basis is computed using regular sampling of the input function at the higher-order grid's nodes.
-However, I plan to provide a spatially adaptive version of the cubic discretization and moreover an implementation of the hp-adaptive discretization algorithm described in [KDBB17].
 The algorithm to generate the discretization is moreover *fully parallelized* using OpenMP and especially well-suited for the discretization of signed distance functions.
 The library moreover provides the functionality to serialize and deserialize the a generated discrete grid.
+Discregrid ships with [TriangleMeshDistance](https://github.com/InteractiveComputerGraphics/TriangleMeshDistance) to directly provide the capability to compute and discretize signed distance fields to triangle meshes.
 
-Besides the library the project includes three executable programs that serve the following purposes:
+Besides the library, the project includes three executable programs that serve the following purposes:
 * *GenerateSDF*: Computes a discrete (cubic) signed distance field from a triangle mesh in OBJ format.
 * *DiscreteFieldToBitmap*: Generates an image in bitmap format of a two-dimensional slice of a previously computed discretization.
 * *GenerateDensityMap*: Generates a density map according to the approach presented in [KB17] from a previously generated discrete signed distance field using the widely adopted cubic spline kernel. The program can be easily extended to work with other kernel function by simply replacing the implementation in sph_kernel.hpp.
