@@ -1,3 +1,5 @@
 #include "cubic_lagrange_discrete_grid.hpp"
+#include "cubic_lagrange_discrete_grid2D.hpp"
 #include "geometry/TriangleMeshDistance.h"
+#include "geometry/PolygonDistance.hpp"
 #include "mesh/triangle_mesh.hpp"

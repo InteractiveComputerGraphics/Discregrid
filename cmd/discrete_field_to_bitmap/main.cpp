@@ -7,7 +7,7 @@
 #include <iostream>
 #include <array>
 
-#include "bmp_file.hpp"
+#include "Discregrid/utility/bmp_file.hpp"
 
 using namespace Eigen;
 
