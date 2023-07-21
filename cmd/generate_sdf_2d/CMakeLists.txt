@@ -13,6 +13,11 @@ if(WIN32)
 	add_definitions(-D_USE_MATH_DEFINES)
 endif(WIN32)
 
+# Enable PolygonDistance to use clipper2 reliant constructor.
+if (USE_CLIPPER2)
+	add_definitions(-DIS_CLIPPER_ENABLED)
+endif()
+
 # OpenMP support.
 find_package(OpenMP REQUIRED)
 if(OPENMP_FOUND)
