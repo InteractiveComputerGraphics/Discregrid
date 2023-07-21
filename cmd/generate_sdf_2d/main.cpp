@@ -7,10 +7,8 @@
 #include <filesystem>
 
 #include <clipper2/clipper.h>
-#include "clipper.svg.h"
-#include "clipper2/clipper.export.h"
-#include "Discregrid/cubic_lagrange_discrete_grid2D.hpp"
-#include "Discregrid/geometry/PolygonDistance.hpp"
+#include <clipper.svg.h>
+#include <clipper2/clipper.export.h>
 
 using namespace Eigen;
 

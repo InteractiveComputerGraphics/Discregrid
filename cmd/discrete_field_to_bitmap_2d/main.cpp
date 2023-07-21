@@ -8,8 +8,6 @@
 #include <array>
 
 #include "Discregrid/utility/bmp_file.hpp"
-#include "Discregrid/cubic_lagrange_discrete_grid2D.hpp"
-#include "Discregrid/discrete_grid2D.hpp"
 
 using namespace Eigen;
 

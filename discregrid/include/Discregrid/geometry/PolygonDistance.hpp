@@ -1,11 +1,12 @@
 #pragma once
 #include <array>
 #include <limits>
-#include <map>
 #include <vector>
 #include <Eigen/src/Core/Matrix.h>
 #include "TriangleMeshDistance.h"
+#ifdef IS_CLIPPER_ENABLED
 #include "clipper2/clipper.core.h"
+#endif
 
 // This file is a derivative of TriangleMeshDistance.h providing the same functionality in 2D.
 // This file can be used to get the distance of a point to a closed polygon (that can contain holes).
@@ -94,12 +95,14 @@ namespace Discregrid
         template<typename IndexableVector2double, typename IndexableVector2int>
         PolygonDistance(const std::vector<IndexableVector2double>& vertices, const std::vector<IndexableVector2int>& edges);
 
+#ifdef IS_CLIPPER_ENABLED
         /**
          * @brief Constructs a new PolygonDistance object.
          *
          * @param polygon Clipper2 PathsD (= Polygon) object.
         */
         PolygonDistance(const Clipper2Lib::PathsD &polygon);
+#endif
 
         /**
          * @brief Initializes an existing PolygonDistance object (including empty ones).
@@ -158,6 +161,7 @@ inline Discregrid::PolygonDistance::PolygonDistance(const std::vector<IndexableV
     this->construct(vertices, edges);
 }
 
+#ifdef IS_CLIPPER_ENABLED
 inline Discregrid::PolygonDistance::PolygonDistance(const Clipper2Lib::PathsD &polygon)
 {
     size_t size = 0;
@@ -186,6 +190,7 @@ inline Discregrid::PolygonDistance::PolygonDistance(const Clipper2Lib::PathsD &p
     }
     this->construct(polygonVertices, polygonEdges);
 }
+#endif
 
 template<typename FLOAT, typename INT, typename SIZE_T>
 inline void Discregrid::PolygonDistance::construct(const FLOAT* vertices, const SIZE_T n_vertices, const INT* edges, const SIZE_T n_edges)
