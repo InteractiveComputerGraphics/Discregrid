@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.11)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 project(Discregrid)
@@ -6,10 +6,26 @@ project(Discregrid)
 # Visual studio solution directories.
 set_property(GLOBAL PROPERTY USE_FOLDERS on)
 
-# Require C++11 compiler
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# 2D SDF generation requires Clipper2 Library by AngusJohnson
+option(USE_CLIPPER2 "Use Clipper2 library to enable 2D SDF generation" OFF)
 
+if (USE_CLIPPER2)
+	# Require C++17 compiler as Clipper2 does
+	set(CMAKE_CXX_STANDARD 17)
+	include(FetchContent)
+	FetchContent_Declare(
+		clipper2
+		GIT_REPOSITORY https://github.com/AngusJohnson/Clipper2.git
+		GIT_TAG        81b01d2acbad7b06fb28df4fbfbd7228519b7905
+		SOURCE_SUBDIR  CPP
+	)
+	FetchContent_MakeAvailable(clipper2)
+else()
+	# Require C++11 compiler
+	set(CMAKE_CXX_STANDARD 11)
+endif()
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable simultaneous compilation of source files.
 if(MSVC)

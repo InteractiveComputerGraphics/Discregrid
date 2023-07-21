@@ -18,6 +18,7 @@ set(HEADERS_GEOMETRY
 set(HEADERS_UTILITY
 	include/Discregrid/utility/serialize.hpp
 	include/Discregrid/utility/lru_cache.hpp
+	include/Discregrid/utility/bmp_file.hpp
 
 	src/utility/timing.hpp
 	src/utility/spinlock.hpp
@@ -36,7 +37,26 @@ set(SOURCES_MESH
 
 set(SOURCES_UTILITY
 	src/utility/timing.cpp
+	src/utility/bmp_file.cpp
 )
+
+if (USE_CLIPPER2)
+
+	list(APPEND HEADERS
+		include/Discregrid/discrete_grid2D.hpp
+		include/Discregrid/cubic_lagrange_discrete_grid2D.hpp
+	)
+
+	list(APPEND HEADERS_GEOMETRY
+		include/Discregrid/geometry/PolygonDistance.hpp
+	)
+	
+	list(APPEND SOURCES
+		src/discrete_grid2D.cpp
+		src/cubic_lagrange_discrete_grid2D.cpp
+	)
+	
+endif()
 
 macro(SOURCEGROUP name)
 	string(TOLOWER ${name} name_lower)
@@ -104,6 +124,7 @@ endif()
 
 # Set link libraries.
 target_link_libraries(Discregrid
+    $<IF:$<BOOL:${USE_CLIPPER2}>,Clipper2,>
 )
 
 install(TARGETS Discregrid
