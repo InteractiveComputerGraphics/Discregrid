@@ -95,29 +95,18 @@ int main(int argc, char* argv[])
 		Discregrid::PolygonDistance pd(polygon);
 		std::cout << "DONE" << std::endl;
 
-		Eigen::Vector2d sample(0.0, 0.0);
-		std::cout << "TEST TEST PLS REMOVE ME: Sampling at (" << sample.x() << "|" << sample.y() << ")..." << std::endl;
-		const Discregrid::Result2D signed_distance = pd.signed_distance(sample);
-		std::cout << "Closest point on polygon from sample: (" << signed_distance.nearest_point.x() << "|" << signed_distance.nearest_point.y() << ")" << std::endl;
-		
-		std::filesystem::path filePath(filename);
-		std::string svg_name = filePath.filename().stem().string().append(".svg");
-		std::cout << "Writing polygon as SVG to " << svg_name << "..." << std::endl;
-		Clipper2Lib::SvgWriter svg;
-		svg.AddPaths(polygon, false, Clipper2Lib::FillRule::NonZero, 0x4080ff9C, 0xFF003300, 1.5, false);
-		Clipper2Lib::PathD signed_distance_path = Clipper2Lib::MakePathD({signed_distance.nearest_point.x(), signed_distance.nearest_point.y(), sample.x(), sample.y()});
-		svg.AddPath(signed_distance_path, true, Clipper2Lib::FillRule::NonZero, 0xFFFF00FF, 0xFFFF00FF, 3, false);
-		std::cout << "TEST TEST PLS REMOVE ME: Sampling from -0.5 to +0.5 in both dimensoins and save to svg..." << std::endl;
-		for (double xSample = -0.5; xSample <= 0.5; xSample += 0.1)
-		{
-			for (double ySample = -0.5; ySample <= 0.5; ySample += 0.1)
-			{
-				const Discregrid::Result2D signed_distance_sample = pd.signed_distance(Vector2d{xSample, ySample});
-				svg.AddPath(Clipper2Lib::MakePathD({signed_distance_sample.nearest_point.x(), signed_distance_sample.nearest_point.y(), xSample, ySample}), true, Clipper2Lib::FillRule::NonZero, 0xFFFF00FF, 0xFFFF00FF, 3, false);
-			}
-		}
-		svg.SaveToFile(svg_name, 1000, 1000, 10);
-		std::cout << "DONE" << std::endl;
+		// The following commented code can be used to test the signed distance function sampling and save the polygon + sample(s) to an SVG file.
+		// std::filesystem::path filePath(filename);
+		// std::string svg_name = filePath.filename().stem().string().append(".svg");
+		// std::cout << "Writing polygon as SVG to " << svg_name << "..." << std::endl;
+		// Clipper2Lib::SvgWriter svg;
+		// svg.AddPaths(polygon, false, Clipper2Lib::FillRule::NonZero, 0x4080ff9C, 0xFF003300, 1.5, false);
+		// Eigen::Vector2d sample(0.0, 0.0);
+		// const Discregrid::Result2D signed_distance = pd.signed_distance(sample);
+		// Clipper2Lib::PathD signed_distance_path = Clipper2Lib::MakePathD({signed_distance.nearest_point.x(), signed_distance.nearest_point.y(), sample.x(), sample.y()});
+		// svg.AddPath(signed_distance_path, true, Clipper2Lib::FillRule::NonZero, 0xFFFF00FF, 0xFFFF00FF, 3, false);
+		// svg.SaveToFile(svg_name, 1000, 1000, 10);
+		// std::cout << "DONE" << std::endl;
 		
 		Eigen::AlignedBox2d domain;
 		domain.setEmpty();
