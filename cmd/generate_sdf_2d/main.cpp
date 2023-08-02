@@ -10,6 +10,8 @@
 #include <clipper.svg.h>
 #include <clipper2/clipper.export.h>
 
+#include "../../discregrid/src/data/z_sort_table.hpp"
+
 using namespace Eigen;
 
 std::istream& operator>>(std::istream& is, std::array<unsigned int, 2>& data)  
@@ -144,6 +146,93 @@ int main(int argc, char* argv[])
 		std::cout << "Generate discretization..." << std::endl;
 		sdf.addFunction(func, true);
 		std::cout << "DONE" << std::endl;
+
+		std::cout << "Reduce discrete field..." << std::endl;
+		constexpr double h = 0.1;
+		sdf.reduceField(0u, [&](const Vector2d &, double v)
+		{
+			return v < h && v > (-h);
+		});
+		std::cout << "DONE" << std::endl;
+
+		std::cout << "Testing z-order..." << std::endl;
+		for (unsigned int i = 0; i < 8; i++)
+		{
+			for (unsigned int j = 0; j < 8; j++)
+			{
+				std::array<unsigned int, 2> p = {i, j};
+				auto morton = morton_lut(p);
+				std::cout << "(" << i << "|" << j << ") : " << morton << std::endl;
+			}
+		}
+		std::cout << "DONE" << std::endl;
+		/*
+		*(0|0) : 0
+(0|1) : 2
+(0|2) : 8
+(0|3) : 10
+(0|4) : 32
+(0|5) : 34
+(0|6) : 40
+(0|7) : 42
+(1|0) : 1
+(1|1) : 3
+(1|2) : 9
+(1|3) : 11
+(1|4) : 33
+(1|5) : 35
+(1|6) : 41
+(1|7) : 43
+(2|0) : 4
+(2|1) : 6
+(2|2) : 12
+(2|3) : 14
+(2|4) : 36
+(2|5) : 38
+(2|6) : 44
+(2|7) : 46
+(3|0) : 5
+(3|1) : 7
+(3|2) : 13
+(3|3) : 15
+(3|4) : 37
+(3|5) : 39
+(3|6) : 45
+(3|7) : 47
+(4|0) : 16
+(4|1) : 18
+(4|2) : 24
+(4|3) : 26
+(4|4) : 48
+(4|5) : 50
+(4|6) : 56
+(4|7) : 58
+(5|0) : 17
+(5|1) : 19
+(5|2) : 25
+(5|3) : 27
+(5|4) : 49
+(5|5) : 51
+(5|6) : 57
+(5|7) : 59
+(6|0) : 20
+(6|1) : 22
+(6|2) : 28
+(6|3) : 30
+(6|4) : 52
+(6|5) : 54
+(6|6) : 60
+(6|7) : 62
+(7|0) : 21
+(7|1) : 23
+(7|2) : 29
+(7|3) : 31
+(7|4) : 53
+(7|5) : 55
+(7|6) : 61
+(7|7) : 63
+
+		 */
 
 		std::cout << "Serialize discretization...";
 		auto output_file = result["o"].as<std::string>();
