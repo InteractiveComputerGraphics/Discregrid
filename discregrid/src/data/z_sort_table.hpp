@@ -235,21 +235,14 @@ inline
 uint64_t morton_lut(std::array<unsigned int, 2> const& coords)
 {
 	uint64_t answer = 0;
-    
-	// We start by shifting the second byte, since we only look at the first 14 bits
 	answer = Morton2D_encode_y_256[(coords[1] >> 16) & 0xFF] |
 			 Morton2D_encode_x_256[(coords[0] >> 16) & 0xFF];
-
-	// Shifting middle byte
 	answer = (answer << 16) |
 			 Morton2D_encode_y_256[(coords[1] >> 8) & 0xFF] |
 			 Morton2D_encode_x_256[(coords[0] >> 8) & 0xFF];
-
-	// Shifting first byte
 	answer = (answer << 16) |
 			 Morton2D_encode_y_256[(coords[1]) & 0xFF] |
 			 Morton2D_encode_x_256[(coords[0]) & 0xFF];
-
 	return answer;
 }
 
