@@ -232,16 +232,17 @@ static const unsigned int Morton2D_encode_y_256[256] =
 };
 
 inline
-uint64_t morton_lut(std::array<unsigned int, 2> const& x)
+uint64_t morton_lut(std::array<unsigned int, 2> const& coords)
 {
 	uint64_t answer = 0;
-	answer = answer << 48 | morton256_z[(x[2] >> 8) & 0xFF] | // shifting second byte
-		morton256_y[(x[1] >> 8) & 0xFF] |
-		morton256_x[(x[0] >> 8) & 0xFF];
-	answer = answer << 24 |
-		morton256_z[(x[2]) & 0xFF] | // first byte
-		morton256_y[(x[1]) & 0xFF] |
-		morton256_x[(x[0]) & 0xFF];
+	answer = Morton2D_encode_y_256[(coords[1] >> 16) & 0xFF] |
+			 Morton2D_encode_x_256[(coords[0] >> 16) & 0xFF];
+	answer = (answer << 16) |
+			 Morton2D_encode_y_256[(coords[1] >> 8) & 0xFF] |
+			 Morton2D_encode_x_256[(coords[0] >> 8) & 0xFF];
+	answer = (answer << 16) |
+			 Morton2D_encode_y_256[(coords[1]) & 0xFF] |
+			 Morton2D_encode_x_256[(coords[0]) & 0xFF];
 	return answer;
 }
 
