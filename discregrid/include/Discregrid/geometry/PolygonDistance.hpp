@@ -363,13 +363,7 @@ inline void Discregrid::PolygonDistance::_construct()
 			std::cout << "PolygonDistance error: Polygon is not valid. At least one vertex does not have exactly two incident edges." << std::endl;
 			exit(-1);
 		}
-		Eigen::Vector2i edge1 = this->edges[edgeNormalIndices[0]];
-		Eigen::Vector2i edge2 = this->edges[edgeNormalIndices[1]];
-		Eigen::Vector2d a = this->vertices[vertexIndex];
-		Eigen::Vector2d b = this->vertices[edge1[0] == edge2[0] || edge1[0] == edge2[1] ? edge1[1] : edge1[0]];
-		Eigen::Vector2d c = this->vertices[vertexIndex == edge2[0] ? edge2[1] : edge2[0]];
-		double alpha0 = std::acos(std::abs((b - a).normalized().dot((c - a).normalized())));
-		this->pseudonormals_vertices[vertexIndex] = (alpha0 * (this->pseudonormals_edges[edgeNormalIndices[0]] + this->pseudonormals_edges[edgeNormalIndices[1]])).normalized();
+		this->pseudonormals_vertices[vertexIndex] = ((this->pseudonormals_edges[edgeNormalIndices[0]] + this->pseudonormals_edges[edgeNormalIndices[1]]) / 2.0).normalized();
 	}
 	
 	this->is_constructed = true;
