@@ -91,6 +91,19 @@ discrete_grid.load(filename); // or
 discrete_grid = Discregrid::CubicLagrangeDiscreteGrid(filename);
 ```
 
+## Citation 
+
+To cite DiscreGrid you can use this BibTeX entry:
+
+```bibtex
+@software{Discregrid_Library,
+   author = {Koschier, Dan and others},
+   license = {MIT},
+   title = {{Discregrid Library}},
+   url = {https://github.com/InteractiveComputerGraphics/Discregrid}
+}
+```
+
 ## References
 
 * [KDBB17] D. Koschier, C. Deul, M. Brand and J. Bender, 2017. "An hp-Adaptive Discretization Algorithm for Signed Distance Field Generation", IEEE Transactions on Visualiztion and Computer Graphics 23, 10, 2208-2221.
