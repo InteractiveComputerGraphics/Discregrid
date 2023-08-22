@@ -6,12 +6,15 @@
 **Figure 1**: Left: Slice of a three-dimensional discrete signed distance field of the Stanford dragon. Right: Density map for SPH boundary handling of Stanford dragon.
 
 **Discregrid** is a static C++ library for the parallel discretization of (preferably smooth) functions on regular grids.
-The library generates a (cubic) polynomial discretization given a box-shaped domain, a grid resolution, and a function that maps a three-dimensional position in space to a real scalar value.
+The library generates a (cubic) polynomial discretization given a box-shaped domain, a grid resolution, and a function that maps a two- or three-dimensional position in space to a real scalar value.
 Isoparametric cubic polynomials of Serendipity type for the cell-wise discretization are employed.
 The coefficient vector for the discrete polynomial basis is computed using regular sampling of the input function at the higher-order grid's nodes.
 The algorithm to generate the discretization is moreover *fully parallelized* using OpenMP and especially well-suited for the discretization of signed distance functions.
 The library moreover provides the functionality to serialize and deserialize the a generated discrete grid.
 Discregrid ships with [TriangleMeshDistance](https://github.com/InteractiveComputerGraphics/TriangleMeshDistance) to directly provide the capability to compute and discretize signed distance fields to triangle meshes.
+
+![](Dragon2D.png)
+**Figure 2**: Left: 2D-Polygon representation of the Stanford dragon. Right: Two-dimensional discrete signed distance field of the Stanford dragon.
 
 Besides the library, the project includes three executable programs that serve the following purposes:
 * *GenerateSDF*: Computes a discrete (cubic) signed distance field from a triangle mesh in OBJ format.
@@ -26,9 +29,12 @@ Besides the library, the project includes three executable programs that serve t
 
 ## Build Instructions
 
-This project is based on [CMake](https://cmake.org/). Simply generate project, Makefiles, etc. using [CMake](https://cmake.org/) and compile the project with the compiler of your choice. The code was tested with the following configurations:
-- Windows 10 64-bit, CMake 3.8, Visual Studio 2017
-- Debian 9 64-bit, CMake 3.8, GCC 6.3.
+This project is based on [CMake](https://cmake.org/). Simply generate project, Makefiles, etc. using [CMake](https://cmake.org/) and compile the project with the compiler of your choice. The minimum required version of CMake for this project is 3.11. The code was tested with the following configurations:
+- Windows 10 64-bit, CMake 3.23.1, Visual Studio 2017
+
+If the option USE_CLIPPER2 is active in CMake the [Clipper2](https://github.com/AngusJohnson/Clipper2) library is automatically downloaded and the following two executable programs can also be generated:
+* *GenerateSDF2D*: Computes a discrete (cubic) 2D signed distance field from a triangle mesh in OBJ format. Clipper2 is used to convert the triangle mesh to a 2D polygon before discretization, as seen on the left in Figure 2.
+* *DiscreteFieldToBitmap2D*: Generates an image in bitmap format of a previously computed 2D discretization.
 
 ## Usage
 In order to use the library, the main header has to be included and the static library has to be compiled and linked against the client program.

@@ -2,6 +2,8 @@
 set(HEADERS
 	include/Discregrid/discrete_grid.hpp
 	include/Discregrid/cubic_lagrange_discrete_grid.hpp
+	include/Discregrid/discrete_grid2D.hpp
+	include/Discregrid/cubic_lagrange_discrete_grid2D.hpp
 )
 
 set(HEADERS_MESH
@@ -13,11 +15,13 @@ set(HEADERS_MESH
 
 set(HEADERS_GEOMETRY
 	include/Discregrid/geometry/TriangleMeshDistance.h
+	include/Discregrid/geometry/PolygonDistance.hpp
 )
 
 set(HEADERS_UTILITY
 	include/Discregrid/utility/serialize.hpp
 	include/Discregrid/utility/lru_cache.hpp
+	include/Discregrid/utility/bmp_file.hpp
 
 	src/utility/timing.hpp
 	src/utility/spinlock.hpp
@@ -26,6 +30,8 @@ set(HEADERS_UTILITY
 set(SOURCES
 	src/discrete_grid.cpp
 	src/cubic_lagrange_discrete_grid.cpp
+	src/discrete_grid2D.cpp
+	src/cubic_lagrange_discrete_grid2D.cpp
 )
 
 set(SOURCES_MESH
@@ -36,6 +42,7 @@ set(SOURCES_MESH
 
 set(SOURCES_UTILITY
 	src/utility/timing.cpp
+	src/utility/bmp_file.cpp
 )
 
 macro(SOURCEGROUP name)
@@ -81,6 +88,11 @@ if(WIN32)
 	add_definitions(-D_USE_MATH_DEFINES)
 endif(WIN32)
 
+# Enable PolygonDistance to use clipper2 reliant constructor.
+if (USE_CLIPPER2)
+	add_definitions(-DIS_CLIPPER_ENABLED)
+endif()
+
 set(DISCREGRID_SOURCE_FILES
 	${HEADERS}
 	${SOURCES}
@@ -104,6 +116,7 @@ endif()
 
 # Set link libraries.
 target_link_libraries(Discregrid
+    $<IF:$<BOOL:${USE_CLIPPER2}>,Clipper2,>
 )
 
 install(TARGETS Discregrid

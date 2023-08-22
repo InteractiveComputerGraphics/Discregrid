@@ -32,8 +32,6 @@ endif()
 
 add_executable(DiscreteFieldToBitmap
 	main.cpp
-	bmp_file.hpp
-	bmp_file.cpp
 )
 
 add_dependencies(DiscreteFieldToBitmap

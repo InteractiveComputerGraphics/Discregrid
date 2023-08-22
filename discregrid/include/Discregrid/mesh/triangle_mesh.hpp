@@ -92,6 +92,8 @@ public:
 
 	Eigen::Vector3d computeFaceNormal(unsigned int f) const;
 
+	void weldVerticesAndCullBackfaces2D(std::vector<Eigen::Vector2d>& culled_vertices, std::vector<unsigned int>& culled_triangles) const;
+	
 private:
 
 	void construct();

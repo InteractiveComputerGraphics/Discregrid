@@ -5,6 +5,7 @@
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
 
 using namespace Eigen;
 
@@ -212,6 +213,74 @@ TriangleMesh::computeFaceNormal(unsigned int f) const
 	Vector3d const& x2 = vertex(faceVertex(f, 2));
 
 	return (x1 - x0).cross(x2 - x0).normalized();
+}
+
+struct Vector2dHash
+{
+	std::size_t operator()(const Vector2d& v) const
+	{
+		std::size_t seed = 0;
+		constexpr std::hash<double> hasher;
+		seed ^= hasher(v.x()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		seed ^= hasher(v.y()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		return seed;
+	}
+};
+
+struct Vector2dEqual
+{
+	bool operator()(const Vector2d& v1, const Vector2d& v2) const
+	{
+		return v1.isApprox(v2);
+	}
+};
+
+void TriangleMesh::weldVerticesAndCullBackfaces2D(std::vector<Vector2d>& culled_vertices, std::vector<unsigned int>& culled_triangles) const
+{
+	const Vector3d view_vector(0, 0, 1); // XY-Plane
+
+	std::vector<Vector2d> culled_and_welded_vertices;
+	std::vector<unsigned int> culled_and_welded_triangles;
+	std::unordered_map<Vector2d, unsigned int, Vector2dHash, Vector2dEqual> vertex_to_index;
+    
+	auto weld_to_mesh = [&](const Vector2d& vertex)
+	{
+		const auto it = vertex_to_index.find(vertex);
+		if (it == vertex_to_index.end())
+		{
+			const unsigned int index = culled_and_welded_vertices.size();
+			culled_and_welded_vertices.push_back(vertex);
+			vertex_to_index[vertex] = index;
+			culled_and_welded_triangles.push_back(index);
+		}
+		else
+		{
+			culled_and_welded_triangles.push_back(it->second);
+		}
+	};
+    
+	for (size_t i = 0; i < m_faces.size(); ++i)
+	{
+		const auto& triangle = m_faces[i];
+		const auto i0 = triangle[0];
+		const auto i1 = triangle[1];
+		const auto i2 = triangle[2];
+		Vector3d v0 = m_vertices[i0];
+		Vector3d v1 = m_vertices[i1];
+		Vector3d v2 = m_vertices[i2];
+		Vector3d e1 = v1 - v0;
+		Vector3d e2 = v2 - v0;
+        
+		if (e1.cross(e2).dot(view_vector) < 0.0)
+		{
+			weld_to_mesh(v0.head<2>());
+			weld_to_mesh(v1.head<2>());
+			weld_to_mesh(v2.head<2>());
+		}
+	}
+    
+	culled_vertices = culled_and_welded_vertices;
+	culled_triangles = culled_and_welded_triangles;
 }
 
 }
