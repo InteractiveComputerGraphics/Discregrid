@@ -106,7 +106,7 @@ public:
 	{
 		return _Mytype(m_index + rhs.m_index, m_mesh);
 	}
-	inline difference_type operator-(_Mytype const& rhs) const
+	inline ype operator-(_Mytype const& rhs) const
 	{
 		return m_index - rhs.m_index;
 	}
@@ -135,7 +135,7 @@ class IncidentFaceIterator
 public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = Halfedge;
-    using difference_type = Halfedge;
+    using difference_type = unsigned int;
     using pointer = Halfedge*;
     using reference = Halfedge&;
 
@@ -171,7 +171,7 @@ class VertexIterator
 public:
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Eigen::Vector3d;
-    using difference_type = double;
+    using difference_type = unsigned int;
     using pointer = Eigen::Vector3d*;
     using reference = Eigen::Vector3d&;
 
@@ -231,7 +231,7 @@ class VertexConstIterator
 public:
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Eigen::Vector3d const;
-    using difference_type = double const;
+    using difference_type = unsigned int const;
     using pointer = Eigen::Vector3d* const;
     using reference = Eigen::Vector3d const&;
 
