@@ -15,7 +15,7 @@ class FaceContainer;
 class FaceIterator
 {
 public:
-	using iterator_category = std::random_access_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
     using value_type = std::array<unsigned int, 3>;
     using difference_type = unsigned int;
     using pointer = std::array<unsigned int, 3>*;
@@ -73,7 +73,7 @@ class FaceConstIterator
 {
 
 public:
-	using iterator_category = std::random_access_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
     using value_type = std::array<unsigned int, 3> const;
     using difference_type = unsigned int const;
     using pointer = std::array<unsigned int, 3> const*;
@@ -133,7 +133,7 @@ class IncidentFaceIterator
 {
 
 public:
-	using iterator_category = std::forward_iterator_tag;
+    using iterator_category = std::forward_iterator_tag;
     using value_type = Halfedge;
     using difference_type = Halfedge;
     using pointer = Halfedge*;
@@ -169,7 +169,7 @@ class VertexIterator
 {
 
 public:
-	using iterator_category = std::random_access_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
     using value_type = Eigen::Vector3d;
     using difference_type = double;
     using pointer = Eigen::Vector3d*;
@@ -229,7 +229,7 @@ class VertexConstIterator
 {
 
 public:
-	using iterator_category = std::random_access_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
     using value_type = Eigen::Vector3d const;
     using difference_type = double const;
     using pointer = Eigen::Vector3d* const;
@@ -283,3 +283,4 @@ private:
 	TriangleMesh const* m_mesh;
 };
 }
+
