@@ -12,10 +12,14 @@ namespace Discregrid
 class TriangleMesh;
 
 class FaceContainer;
-class FaceIterator : public
-	std::iterator<std::random_access_iterator_tag, std::array<unsigned int, 3>>
+class FaceIterator
 {
 public:
+	using iterator_category = std::random_access_iterator_tag;
+    using value_type = std::array<unsigned int, 3>;
+    using difference_type = unsigned int;
+    using pointer = std::array<unsigned int, 3>*;
+    using reference = std::array<unsigned int, 3>&;
 
 	typedef FaceIterator _Mytype;
 
@@ -65,11 +69,15 @@ private:
 	unsigned int m_index;
 	TriangleMesh* m_mesh;
 };
-class FaceConstIterator : public
-	std::iterator<std::random_access_iterator_tag, std::array<unsigned int, 3> const>
+class FaceConstIterator
 {
 
 public:
+	using iterator_category = std::random_access_iterator_tag;
+    using value_type = std::array<unsigned int, 3> const;
+    using difference_type = unsigned int const;
+    using pointer = std::array<unsigned int, 3> const*;
+    using reference = std::array<unsigned int, 3> const&;
 
 	typedef FaceConstIterator _Mytype;
 
@@ -121,10 +129,15 @@ private:
 };
 
 class IncidentFaceContainer;
-class IncidentFaceIterator : public std::iterator<std::forward_iterator_tag, Halfedge>
+class IncidentFaceIterator
 {
 
 public:
+	using iterator_category = std::forward_iterator_tag;
+    using value_type = Halfedge;
+    using difference_type = Halfedge;
+    using pointer = Halfedge*;
+    using reference = Halfedge&;
 
 	typedef IncidentFaceIterator _Mytype;
 
@@ -152,10 +165,15 @@ private:
 
 
 class VertexContainer;
-class VertexIterator : public std::iterator<std::random_access_iterator_tag, Eigen::Vector3d>
+class VertexIterator
 {
 
 public:
+	using iterator_category = std::random_access_iterator_tag;
+    using value_type = Eigen::Vector3d;
+    using difference_type = double;
+    using pointer = Eigen::Vector3d*;
+    using reference = Eigen::Vector3d&;
 
 	typedef VertexIterator _Mytype;
 
@@ -207,11 +225,15 @@ private:
 
 
 class VertexConstContainer;
-class VertexConstIterator : 
-	public std::iterator<std::random_access_iterator_tag, Eigen::Vector3d const>
+class VertexConstIterator
 {
 
 public:
+	using iterator_category = std::random_access_iterator_tag;
+    using value_type = Eigen::Vector3d const;
+    using difference_type = double const;
+    using pointer = Eigen::Vector3d* const;
+    using reference = Eigen::Vector3d const&;
 
 	typedef VertexConstIterator _Mytype;
 
@@ -261,4 +283,3 @@ private:
 	TriangleMesh const* m_mesh;
 };
 }
-
