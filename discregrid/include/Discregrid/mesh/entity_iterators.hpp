@@ -106,7 +106,7 @@ public:
 	{
 		return _Mytype(m_index + rhs.m_index, m_mesh);
 	}
-	inline ype operator-(_Mytype const& rhs) const
+	inline difference_type operator-(_Mytype const& rhs) const
 	{
 		return m_index - rhs.m_index;
 	}
