@@ -17,9 +17,9 @@ class FaceIterator
 public:
     using iterator_category = std::random_access_iterator_tag;
     using value_type = std::array<unsigned int, 3>;
-    using difference_type = unsigned int;
-    using pointer = std::array<unsigned int, 3>*;
-    using reference = std::array<unsigned int, 3>&;
+    using difference_type = ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
 	typedef FaceIterator _Mytype;
 
@@ -75,9 +75,9 @@ class FaceConstIterator
 public:
     using iterator_category = std::random_access_iterator_tag;
     using value_type = std::array<unsigned int, 3> const;
-    using difference_type = unsigned int const;
-    using pointer = std::array<unsigned int, 3> const*;
-    using reference = std::array<unsigned int, 3> const&;
+    using difference_type = ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
 	typedef FaceConstIterator _Mytype;
 
@@ -135,9 +135,9 @@ class IncidentFaceIterator
 public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = Halfedge;
-    using difference_type = unsigned int;
-    using pointer = Halfedge*;
-    using reference = Halfedge&;
+    using difference_type = ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
 	typedef IncidentFaceIterator _Mytype;
 
@@ -171,9 +171,9 @@ class VertexIterator
 public:
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Eigen::Vector3d;
-    using difference_type = unsigned int;
-    using pointer = Eigen::Vector3d*;
-    using reference = Eigen::Vector3d&;
+    using difference_type = ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
 	typedef VertexIterator _Mytype;
 
@@ -231,9 +231,9 @@ class VertexConstIterator
 public:
     using iterator_category = std::random_access_iterator_tag;
     using value_type = Eigen::Vector3d const;
-    using difference_type = unsigned int const;
-    using pointer = Eigen::Vector3d* const;
-    using reference = Eigen::Vector3d const&;
+    using difference_type = ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
 
 	typedef VertexConstIterator _Mytype;
 
